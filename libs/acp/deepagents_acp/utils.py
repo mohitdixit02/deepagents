@@ -6,14 +6,50 @@ import re
 import shlex
 from typing import TYPE_CHECKING
 
+from acp.schema import (
+    AudioContentBlock,
+    ImageContentBlock,
+    TextContentBlock,
+)
+
 if TYPE_CHECKING:
     from acp.schema import (
-        AudioContentBlock,
         EmbeddedResourceContentBlock,
-        ImageContentBlock,
         ResourceContentBlock,
-        TextContentBlock,
     )
+
+try:
+    from acp import audio_block, image_block, text_block
+except ImportError:
+
+    def text_block(text: str) -> TextContentBlock:
+        """Create an ACP text content block."""
+        return TextContentBlock(type="text", text=text)
+
+    def image_block(data: str, mime_type: str, *, uri: str | None = None) -> ImageContentBlock:
+        """Create an ACP image content block."""
+        return ImageContentBlock(type="image", data=data, mime_type=mime_type, uri=uri)
+
+    def audio_block(data: str, mime_type: str) -> AudioContentBlock:
+        """Create an ACP audio content block."""
+        return AudioContentBlock(type="audio", data=data, mime_type=mime_type)
+
+
+__all__ = [
+    "DANGEROUS_SHELL_PATTERNS",
+    "audio_block",
+    "contains_dangerous_patterns",
+    "convert_audio_block_to_content_blocks",
+    "convert_embedded_resource_block_to_content_blocks",
+    "convert_image_block_to_content_blocks",
+    "convert_resource_block_to_content_blocks",
+    "convert_text_block_to_content_blocks",
+    "extract_command_types",
+    "format_execute_result",
+    "image_block",
+    "text_block",
+    "truncate_execute_command_for_display",
+]
 
 
 def convert_text_block_to_content_blocks(block: TextContentBlock) -> list[dict[str, str]]:

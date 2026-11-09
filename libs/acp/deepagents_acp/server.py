@@ -15,18 +15,20 @@ from acp import (
     PromptResponse,
     SetSessionConfigOptionResponse,
     SetSessionModeResponse,
-    audio_block,
-    image_block,
     run_agent as run_acp_agent,
     schema as _acp_schema,
     start_edit_tool_call,
     start_tool_call,
-    text_block,
     tool_content,
     tool_diff_content,
     update_agent_message,
     update_tool_call,
 )
+
+try:
+    from acp import audio_block, image_block, text_block
+except ImportError:
+    from deepagents_acp.utils import audio_block, image_block, text_block
 from acp.exceptions import RequestError
 from acp.schema import (
     AgentCapabilities,
